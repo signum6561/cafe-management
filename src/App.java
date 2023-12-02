@@ -13,11 +13,9 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("view/loginPage.fxml"));
-        
         Scene scene = new Scene(root);
-        
-        stage.setTitle("Cafe Shop Management System");
-        
+        stage.setTitle("Login");
+        stage.setResizable(false);
         stage.setScene(scene);
         stage.show();
     }
@@ -28,5 +26,4 @@ public class App extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
 }

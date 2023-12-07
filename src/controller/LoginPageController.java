@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import db.database;
 import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,116 +18,95 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import utils.database;
 
-public class LoginPageController implements Initializable {
 
-    @FXML
-    private TextField fp_answer;
+// #endregion
 
-    @FXML
-    private Button fp_back;
+public class LoginPageController implements Initializable
+{
+    // #region components
+    @FXML private TextField fp_answer;
 
-    @FXML
-    private Button fp_proceedBtn;
+    @FXML private Button fp_back;
 
-    @FXML
-    private ComboBox<?> fp_question;
+    @FXML private Button fp_proceedBtn;
 
-    @FXML
-    private AnchorPane fp_questionForm;
+    @FXML private ComboBox<?> fp_question;
 
-    @FXML
-    private TextField fp_username;
+    @FXML private AnchorPane fp_questionForm;
 
-    @FXML
-    private Button np_back;
+    @FXML private TextField fp_username;
 
-    @FXML
-    private Button np_changePassBtn;
+    @FXML private Button np_back;
 
-    @FXML
-    private PasswordField np_confirmPassword;
+    @FXML private Button np_changePassBtn;
 
-    @FXML
-    private AnchorPane np_newPassForm;
+    @FXML private PasswordField np_confirmPassword;
 
-    @FXML
-    private PasswordField np_newPassword;
+    @FXML private AnchorPane np_newPassForm;
 
-    @FXML
-    private Hyperlink si_forgotPass;
+    @FXML private PasswordField np_newPassword;
 
-    @FXML
-    private Button si_loginBtn;
+    @FXML private Hyperlink si_forgotPass;
 
-    @FXML
-    private AnchorPane si_loginForm;
+    @FXML private Button si_loginBtn;
 
-    @FXML
-    private PasswordField si_password;
+    @FXML private AnchorPane si_loginForm;
 
-    @FXML
-    private TextField si_username;
+    @FXML private PasswordField si_password;
 
-    @FXML
-    private Button side_CreateBtn;
+    @FXML private TextField si_username;
 
-    @FXML
-    private Button side_alreadyHave;
+    @FXML private Button side_CreateBtn;
 
-    @FXML
-    private AnchorPane side_form;
+    @FXML private Button side_alreadyHave;
 
-    @FXML
-    private TextField su_answer;
+    @FXML private AnchorPane side_form;
 
-    @FXML
-    private PasswordField su_password;
+    @FXML private TextField su_answer;
 
-    @FXML
-    private ComboBox<?> su_question;
+    @FXML private PasswordField su_password;
 
-    @FXML
-    private Button su_signupBtn;
+    @FXML private ComboBox<?> su_question;
 
-    @FXML
-    private AnchorPane su_signupForm;
+    @FXML private Button su_signupBtn;
 
-    @FXML
-    private TextField su_username;
+    @FXML private AnchorPane su_signupForm;
 
-    public String[] questionList = { "What is your favorite color?", "What is your favorite food?",
-            "What is your birth date?" };
+    @FXML private TextField su_username;
+    // #endregion
+
+    public String[] questionList = {
+        "What is your favorite color?", "What is your favorite food?", "What is your birth date?"};
 
     private Alert alert;
     private Connection connect;
     private PreparedStatement prepare;
     private ResultSet result;
 
-    @FXML
-    void backToLoginForm(ActionEvent event) {
+    @FXML void backToLoginForm(ActionEvent event)
+    {
         fp_questionForm.setVisible(false);
         si_loginForm.setVisible(true);
     }
 
-    @FXML
-    void backToQuestionForm(ActionEvent event) {
-
+    @FXML void backToQuestionForm(ActionEvent event)
+    {
     }
 
-    @FXML
-    void changePassBtn(ActionEvent event) {
-        if(np_newPassword.getText().isEmpty()
-        || np_confirmPassword.getText().isEmpty())
+    @FXML void changePassBtn(ActionEvent event)
+    {
+        if(np_newPassword.getText().isEmpty() || np_confirmPassword.getText().isEmpty())
         {
             alert = new Alert(AlertType.ERROR);
             alert.setTitle("Error Message");
@@ -169,10 +146,9 @@ public class LoginPageController implements Initializable {
         }
     }
 
-    @FXML
-    void loginBtn(ActionEvent event) {
-        if(si_username.getText().isEmpty()
-        || si_password.getText().isEmpty())
+    @FXML void loginBtn(ActionEvent event)
+    {
+        if(si_username.getText().isEmpty() || si_password.getText().isEmpty())
         {
             alert = new Alert(AlertType.ERROR);
             alert.setTitle("Error Message");
@@ -182,7 +158,7 @@ public class LoginPageController implements Initializable {
         }
         else
         {
-            String selectData  = "SELECT username, pass FROM employee WHERE username = ? and pass = ?";
+            String selectData = "SELECT username, pass FROM employee WHERE username = ? and pass = ?";
             connect = database.connectDB();
             try
             {
@@ -224,11 +200,10 @@ public class LoginPageController implements Initializable {
         }
     }
 
-    @FXML
-    void proceedBtn(ActionEvent event) {
-        if(fp_question.getSelectionModel().getSelectedItem() == null
-        || fp_answer.getText().isEmpty()
-        || fp_username.getText().isEmpty())
+    @FXML void proceedBtn(ActionEvent event)
+    {
+        if(fp_question.getSelectionModel().getSelectedItem() == null || fp_answer.getText().isEmpty()
+           || fp_username.getText().isEmpty())
         {
             alert = new Alert(AlertType.ERROR);
             alert.setTitle("Error Message");
@@ -236,15 +211,16 @@ public class LoginPageController implements Initializable {
             alert.setContentText("Please fill all blank fields");
             alert.showAndWait();
         }
-        else 
+        else
         {
-            String selectData = "SELECT username, question, answer FROM employee WHERE username = ? AND question = ? AND answer = ?";
+            String selectData =
+                "SELECT username, question, answer FROM employee WHERE username = ? AND question = ? AND answer = ?";
             connect = database.connectDB();
             try
             {
                 prepare = connect.prepareStatement(selectData);
                 prepare.setString(1, fp_username.getText());
-                prepare.setString(2, (String) fp_question.getSelectionModel().getSelectedItem());
+                prepare.setString(2, (String)fp_question.getSelectionModel().getSelectedItem());
                 prepare.setString(3, fp_answer.getText());
                 result = prepare.executeQuery();
                 if(result.next())
@@ -258,7 +234,7 @@ public class LoginPageController implements Initializable {
                     alert.setTitle("Error Message");
                     alert.setHeaderText(null);
                     alert.setContentText("Incorrect Information");
-                    alert.showAndWait();     
+                    alert.showAndWait();
                 }
             }
             catch(Exception e)
@@ -268,25 +244,26 @@ public class LoginPageController implements Initializable {
         }
     }
 
-    @FXML
-    void regBtn(ActionEvent event) {
-        if (su_username.getText().isEmpty()
-                || su_password.getText().isEmpty()
-                || su_question.getSelectionModel().getSelectedItem() == null
-                || su_answer.getText().isEmpty()) {
+    @FXML void regBtn(ActionEvent event)
+    {
+        if(su_username.getText().isEmpty() || su_password.getText().isEmpty()
+           || su_question.getSelectionModel().getSelectedItem() == null || su_answer.getText().isEmpty())
+        {
             alert = new Alert(AlertType.ERROR);
             alert.setTitle("Error Message");
             alert.setHeaderText(null);
             alert.setContentText("Please fill all blank fields");
             alert.showAndWait();
-        } else {
+        }
+        else
+        {
             String reqData = "INSERT INTO employee (username, pass, question, answer, date)"
-                    + "VALUES(?,?,?,?,?)";
+                             + "VALUES(?,?,?,?,?)";
             connect = database.connectDB();
-            try {
+            try
+            {
 
-                String checkUsername = "SELECT username FROM employee WHERE username = '"
-                    + su_username.getText() + "'";
+                String checkUsername = "SELECT username FROM employee WHERE username = '" + su_username.getText() + "'";
                 prepare = connect.prepareStatement(checkUsername);
                 result = prepare.executeQuery();
                 if(result.next())
@@ -310,9 +287,9 @@ public class LoginPageController implements Initializable {
                     prepare = connect.prepareStatement(reqData);
                     prepare.setString(1, su_username.getText());
                     prepare.setString(2, su_password.getText());
-                    prepare.setString(3, (String) su_question.getSelectionModel().getSelectedItem());
+                    prepare.setString(3, (String)su_question.getSelectionModel().getSelectedItem());
                     prepare.setString(4, su_answer.getText());
-                    
+
                     Date date = new Date();
                     java.sql.Date sqlDate = new java.sql.Date(date.getTime());
                     prepare.setString(5, String.valueOf(sqlDate));
@@ -341,16 +318,16 @@ public class LoginPageController implements Initializable {
                     });
                     slider.play();
                 }
-            } 
-            catch (Exception e)  
+            }
+            catch(Exception e)
             {
                 e.printStackTrace();
             }
         }
     }
 
-    @FXML
-    void switchForgotPass(ActionEvent event) {
+    @FXML void switchForgotPass(ActionEvent event)
+    {
         fp_questionForm.setVisible(true);
         si_loginForm.setVisible(false);
 
@@ -367,20 +344,23 @@ public class LoginPageController implements Initializable {
         fp_question.setItems(listData);
     }
 
-    public void reqLquestionList() {
+    public void reqLquestionList()
+    {
         List<String> listQ = new ArrayList<>();
-        for (String data : questionList) {
+        for(String data : questionList)
+        {
             listQ.add(data);
         }
         ObservableList listData = FXCollections.observableArrayList(listQ);
         su_question.setItems(listData);
     }
 
-    @FXML
-    void switchForm(ActionEvent event) {
+    @FXML void switchForm(ActionEvent event)
+    {
         TranslateTransition slider = new TranslateTransition();
 
-        if (event.getSource() == side_CreateBtn) {
+        if(event.getSource() == side_CreateBtn)
+        {
             slider.setNode(side_form);
             slider.setToX(300);
             slider.setDuration(Duration.seconds(.5));
@@ -393,7 +373,9 @@ public class LoginPageController implements Initializable {
                 reqLquestionList();
             });
             slider.play();
-        } else if (event.getSource() == side_alreadyHave) {
+        }
+        else if(event.getSource() == side_alreadyHave)
+        {
             slider.setNode(side_form);
             slider.setToX(0);
             slider.setDuration(Duration.seconds(.5));
@@ -405,8 +387,7 @@ public class LoginPageController implements Initializable {
         }
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-
+    @Override public void initialize(URL url, ResourceBundle rb)
+    {
     }
 }

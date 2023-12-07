@@ -1,23 +1,14 @@
 package controller;
 
+import dao.CatagoriesDAO;
+
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
-import db.database;
-import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,197 +17,141 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.BarChart;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import model.Catagories;
+import utils.TableUtil;
 
-public class DashboardController implements Initializable {
 
-    @FXML
-    private AnchorPane main_form;
 
-    @FXML
-    private Button close;
+public class DashboardController implements Initializable
+{
 
-    @FXML
-    private Button minimize;
+    @FXML private AnchorPane main_form;
 
-    @FXML
-    private Label username;
+    @FXML private Button close;
 
-    @FXML
-    private Button dashboard_btn;
+    @FXML private Button minimize;
 
-    @FXML
-    private Button avaialbeFD_btn;
+    @FXML private Label username;
 
-    @FXML
-    private Button order_btn;
+    @FXML private Button dashboard_btn;
 
-    @FXML
-    private Button logout;
+    @FXML private Button avaialbeFD_btn;
 
-    @FXML
-    private AnchorPane dashboard_form;
+    @FXML private Button order_btn;
 
-    @FXML
-    private Label dashboard_NC;
+    @FXML private Button logout;
 
-    @FXML
-    private Label dashboard_TI;
+    @FXML private AnchorPane dashboard_form;
 
-    @FXML
-    private Label dashboard_TIncome;
+    @FXML private Label dashboard_NC;
 
-    @FXML
-    private BarChart<?, ?> dashboard_NOCChart;
+    @FXML private Label dashboard_TI;
 
-    @FXML
-    private AreaChart<?, ?> dashboard_ICChart;
+    @FXML private Label dashboard_TIncome;
 
-    @FXML
-    private AnchorPane availableFD_form;
+    @FXML private BarChart<?, ?> dashboard_NOCChart;
 
-    @FXML
-    private TextField availableFD_productID;
+    @FXML private AreaChart<?, ?> dashboard_ICChart;
 
-    @FXML
-    private TextField availableFD_productName;
+    @FXML private AnchorPane availableFD_form;
 
-    @FXML
-    private ComboBox<?> availableFD_productType;
+    @FXML private TextField availableFD_productID;
 
-    @FXML
-    private TextField availableFD_productPrice;
+    @FXML private TextField availableFD_productName;
 
-    @FXML
-    private ComboBox<?> availableFD_productStatus;
+    @FXML private ComboBox<?> availableFD_productType;
 
-    @FXML
-    private Button availableFD_addBtn;
+    @FXML private TextField availableFD_productPrice;
 
-    @FXML
-    private Button availableFD_updateBtn;
+    @FXML private ComboBox<?> availableFD_productStatus;
 
-    @FXML
-    private Button availableFD_clearBtn;
+    @FXML private Button availableFD_addBtn;
 
-    @FXML
-    private Button availableFD_deleteBtn;
+    @FXML private Button availableFD_updateBtn;
 
-    @FXML
-    private TextField availableFD_search;
+    @FXML private Button availableFD_clearBtn;
 
-    @FXML
-    private TableView<catagories> availableFD_tableView;
+    @FXML private Button availableFD_deleteBtn;
 
-    @FXML
-    private TableColumn<catagories, String> availableFD_col_productID;
+    @FXML private TextField availableFD_search;
 
-    @FXML
-    private TableColumn<catagories, String> availableFD_col_productName;
+    @FXML private TableView<Catagories> availableFD_tableView;
 
-    @FXML
-    private TableColumn<catagories, String> availableFD_col_type;
+    @FXML private TableColumn<Catagories, String> availableFD_col_productID;
 
-    @FXML
-    private TableColumn<catagories, String> availableFD_col_price;
+    @FXML private TableColumn<Catagories, String> availableFD_col_productName;
 
-    @FXML
-    private TableColumn<catagories, String> availableFD_col_status;
+    @FXML private TableColumn<Catagories, String> availableFD_col_type;
 
-    @FXML
-    private AnchorPane order_form;
+    @FXML private TableColumn<Catagories, String> availableFD_col_price;
 
-    @FXML
-    private TableView<product> order_tableView;
+    @FXML private TableColumn<Catagories, String> availableFD_col_status;
 
-    @FXML
-    private TableColumn<product, String> order_col_productID;
+    @FXML private AnchorPane order_form;
 
-    @FXML
-    private TableColumn<product, String> order_col_productName;
+    @FXML private TableView<?> order_tableView;
 
-    @FXML
-    private TableColumn<product, String> order_col_tyoe;
+    @FXML private TableColumn<?, ?> order_col_productID;
 
-    @FXML
-    private TableColumn<product, String> order_col_price;
+    @FXML private TableColumn<?, ?> order_col_productName;
 
-    @FXML
-    private TableColumn<product, String> order_col_quantity;
+    @FXML private TableColumn<?, ?> order_col_tyoe;
 
-    @FXML
-    private ComboBox<?> order_productID;
+    @FXML private TableColumn<?, ?> order_col_price;
 
-    @FXML
-    private ComboBox<?> order_productName;
+    @FXML private TableColumn<?, ?> order_col_quantity;
 
-    @FXML
-    private Spinner<Integer> order_quantity;
+    @FXML private ComboBox<?> order_productID;
 
-    @FXML
-    private Button order_addBtn;
+    @FXML private ComboBox<?> order_productName;
 
-    @FXML
-    private Label order_total;
+    @FXML private Spinner<Integer> order_quantity;
 
-    @FXML
-    private TextField order_amount;
+    @FXML private Button order_addBtn;
 
-    @FXML
-    private Label order_balance;
+    @FXML private Label order_total;
 
-    @FXML
-    private Button order_payBtn;
+    @FXML private TextField order_amount;
 
-    @FXML
-    private Button order_receiptBtn;
+    @FXML private Label order_balance;
 
-    @FXML
-    private Button order_removeBtn;
+    @FXML private Button order_payBtn;
+
+    @FXML private Button order_receiptBtn;
+
+    @FXML private Button order_removeBtn;
     private Alert alert;
-    private String[] catagories = {"Meals", "Drinks"};
-    private String[] status = {"Available", "Not Available"};
-    private Connection connect;
-    private PreparedStatement prepare;
-    private Statement statement;
-    private ResultSet result;
+    List<String> status = new ArrayList<>();
+    List<String> type = new ArrayList<>();
 
-    @FXML
-    void availableFDAdd(ActionEvent event) {
-        String sql = "INSERT INTO catagory(product_id, product_name, type, price, status)"
-            + "VALUES(?,?,?,?,?)";
-        connect = database.connectDB();
+    @FXML void availableFDAdd(ActionEvent event)
+    {
+        Catagories cat = new Catagories();
         try
         {
-            prepare = connect.prepareStatement(sql);
-            prepare.setString(1, availableFD_productID.getText());
-            prepare.setString(2, availableFD_productName.getText());
-            prepare.setString(3, (String) availableFD_productType.getSelectionModel().getSelectedItem());
-            prepare.setString(4, availableFD_productPrice.getText());
-            prepare.setString(5, (String) availableFD_productStatus.getSelectionModel().getSelectedItem());
+            cat.setProductID(availableFD_productID.getText());
+            cat.setName(availableFD_productName.getText());
+            cat.setType((String)availableFD_productType.getSelectionModel().getSelectedItem());
+            cat.setPrice(Double.parseDouble(availableFD_productPrice.getText()));
+            cat.setStatus((String)availableFD_productStatus.getSelectionModel().getSelectedItem());
 
-            if(availableFD_productID.getText().isEmpty()
-            || availableFD_productName.getText().isEmpty()
-            || availableFD_productType.getSelectionModel() == null
-            || availableFD_productPrice.getText().isEmpty()
-            || availableFD_productStatus.getSelectionModel() == null)
+            if(availableFD_productID.getText().isEmpty() || availableFD_productName.getText().isEmpty()
+               || availableFD_productType.getSelectionModel() == null || availableFD_productPrice.getText().isEmpty()
+               || availableFD_productStatus.getSelectionModel() == null)
             {
                 alert = new Alert(AlertType.ERROR);
                 alert.setTitle("Error Message");
@@ -225,15 +160,7 @@ public class DashboardController implements Initializable {
                 alert.showAndWait();
                 return;
             }
-            else
-            {
-                String checkData = "SELECT product_id FROM catagory WHERE product_id = '"
-                    + availableFD_productID.getText() + "'";
-                connect = database.connectDB();
-                statement = connect.createStatement();
-                result = statement.executeQuery(checkData);
-            }
-            if(result.next())
+            else if(CatagoriesDAO.Instance().containID(availableFD_productID.getText()))
             {
                 alert = new Alert(AlertType.ERROR);
                 alert.setTitle("Error Message");
@@ -243,7 +170,7 @@ public class DashboardController implements Initializable {
             }
             else
             {
-                prepare.executeUpdate();
+                CatagoriesDAO.Instance().insert(cat);
                 alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Information Message");
                 alert.setHeaderText(null);
@@ -252,7 +179,6 @@ public class DashboardController implements Initializable {
                 availableFDShowData();
                 availableFDClear();
             }
-
         }
         catch(Exception e)
         {
@@ -260,8 +186,8 @@ public class DashboardController implements Initializable {
         }
     }
 
-    @FXML
-    void availableFDClear() {
+    @FXML void availableFDClear()
+    {
         availableFD_productID.setText("");
         availableFD_productName.setText("");
         availableFD_productType.getSelectionModel().clearSelection();
@@ -269,18 +195,11 @@ public class DashboardController implements Initializable {
         availableFD_productStatus.getSelectionModel().clearSelection();
     }
 
-    @FXML
-    void availableFDDelete(ActionEvent event) {
-        String sql = "DELETE FROM catagory WHERE product_id = '" + availableFD_productID.getText() + "'";
-        connect = database.connectDB();
+    @FXML void availableFDDelete(ActionEvent event)
+    {
         try
         {
-            prepare = connect.prepareStatement(sql);
-            if(availableFD_productID.getText().isEmpty()
-            || availableFD_productName.getText().isEmpty()
-            || availableFD_productType.getSelectionModel() == null
-            || availableFD_productPrice.getText().isEmpty()
-            || availableFD_productStatus.getSelectionModel() == null)
+            if(availableFD_productID.getText().isEmpty())
             {
                 alert = new Alert(AlertType.ERROR);
                 alert.setTitle("Error Message");
@@ -288,15 +207,7 @@ public class DashboardController implements Initializable {
                 alert.setContentText("Please fill all blank fields");
                 alert.showAndWait();
             }
-            else
-            {
-                String checkData = "SELECT product_id FROM catagory WHERE product_id = '"
-                    + availableFD_productID.getText() + "'";
-                connect = database.connectDB();
-                statement = connect.createStatement();
-                result = statement.executeQuery(checkData);
-            }
-            if(!result.next())
+            if(!CatagoriesDAO.Instance().containID(availableFD_productID.getText()))
             {
                 alert = new Alert(AlertType.ERROR);
                 alert.setTitle("Error Message");
@@ -309,12 +220,13 @@ public class DashboardController implements Initializable {
                 alert = new Alert(AlertType.CONFIRMATION);
                 alert.setTitle("Confirmation Message");
                 alert.setHeaderText(null);
-                alert.setContentText("Are you sure you want to DELETE ProductID: " + availableFD_productID.getText() + "?");
+                alert.setContentText("Are you sure you want to DELETE ProductID: " + availableFD_productID.getText()
+                                     + "?");
 
                 Optional<ButtonType> option = alert.showAndWait();
                 if(option.get().equals(ButtonType.OK))
                 {
-                    prepare.executeUpdate();
+                    CatagoriesDAO.Instance().delete(availableFD_productID.getText());
                     alert = new Alert(AlertType.CONFIRMATION);
                     alert.setTitle("Information Message");
                     alert.setHeaderText(null);
@@ -335,43 +247,44 @@ public class DashboardController implements Initializable {
         }
     }
 
-    @FXML
-    void availableFDSearch() {
-        
+    @FXML void availableFDSearch()
+    {
     }
 
-    @FXML
-    void availableFDSelect(MouseEvent event) {
-        catagories catData = availableFD_tableView.getSelectionModel().getSelectedItem();
+    @FXML void availableFDSelect(MouseEvent event)
+    {
+        Catagories catData = availableFD_tableView.getSelectionModel().getSelectedItem();
         int num = availableFD_tableView.getSelectionModel().getSelectedIndex();
         if(num - 1 < -1)
             return;
-        availableFD_productID.setText(catData.getProductID());
-        availableFD_productName.setText(catData.getName());
-        availableFD_productPrice.setText(String.valueOf(catData.getPrice()));
-        
-    }
-
-    @FXML
-    void availableFDUpdate(ActionEvent event) {
-        String sql = "UPDATE catagory SET "
-            + "product_name = ?, type = ?, price = ?, status = ? "
-            + "WHERE product_id = ?";
-        connect = database.connectDB();
         try
         {
-            prepare = connect.prepareStatement(sql);
-            prepare.setString(1, availableFD_productName.getText());
-            prepare.setString(2, (String) availableFD_productType.getSelectionModel().getSelectedItem());
-            prepare.setString(3, availableFD_productPrice.getText());
-            prepare.setString(4, (String) availableFD_productStatus.getSelectionModel().getSelectedItem());
-            prepare.setString(5, availableFD_productID.getText());
+            availableFD_productID.setText(catData.getProductID());
+            availableFD_productName.setText(catData.getName());
+            availableFD_productType.getSelectionModel().select(type.indexOf(catData.getType()));
+            availableFD_productPrice.setText(String.valueOf(catData.getPrice()));
+            availableFD_productStatus.getSelectionModel().select(status.indexOf(catData.getStatus()));
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
 
-            if(availableFD_productID.getText().isEmpty()
-            || availableFD_productName.getText().isEmpty()
-            || availableFD_productType.getSelectionModel() == null
-            || availableFD_productPrice.getText().isEmpty()
-            || availableFD_productStatus.getSelectionModel() == null)
+    @FXML void availableFDUpdate(ActionEvent event)
+    {
+        Catagories cat = new Catagories();
+        try
+        {
+            cat.setProductID(availableFD_productID.getText());
+            cat.setName(availableFD_productName.getText());
+            cat.setType((String)availableFD_productType.getSelectionModel().getSelectedItem());
+            cat.setPrice(Double.parseDouble(availableFD_productPrice.getText()));
+            cat.setStatus((String)availableFD_productStatus.getSelectionModel().getSelectedItem());
+
+            if(availableFD_productID.getText().isEmpty() || availableFD_productName.getText().isEmpty()
+               || availableFD_productType.getSelectionModel() == null || availableFD_productPrice.getText().isEmpty()
+               || availableFD_productStatus.getSelectionModel() == null)
             {
                 alert = new Alert(AlertType.ERROR);
                 alert.setTitle("Error Message");
@@ -379,15 +292,7 @@ public class DashboardController implements Initializable {
                 alert.setContentText("Please fill all blank fields");
                 alert.showAndWait();
             }
-            else
-            {
-                String checkData = "SELECT product_id FROM catagory WHERE product_id = '"
-                    + availableFD_productID.getText() + "'";
-                connect = database.connectDB();
-                statement = connect.createStatement();
-                result = statement.executeQuery(checkData);
-            }
-            if(!result.next())
+            if(!CatagoriesDAO.Instance().containID(availableFD_productID.getText()))
             {
                 alert = new Alert(AlertType.ERROR);
                 alert.setTitle("Error Message");
@@ -400,12 +305,13 @@ public class DashboardController implements Initializable {
                 alert = new Alert(AlertType.CONFIRMATION);
                 alert.setTitle("Confirmation Message");
                 alert.setHeaderText(null);
-                alert.setContentText("Are you sure you want to UPDATED ProductID: " + availableFD_productID.getText() + "?");
+                alert.setContentText("Are you sure you want to UPDATED ProductID: " + availableFD_productID.getText()
+                                     + "?");
 
                 Optional<ButtonType> option = alert.showAndWait();
                 if(option.get().equals(ButtonType.OK))
                 {
-                    prepare.executeUpdate();
+                    CatagoriesDAO.Instance().update(cat);
                     alert = new Alert(AlertType.CONFIRMATION);
                     alert.setTitle("Information Message");
                     alert.setHeaderText(null);
@@ -425,77 +331,48 @@ public class DashboardController implements Initializable {
             e.printStackTrace();
         }
     }
-    public ObservableList<catagories> availableFDListData()
-    {
-        ObservableList<catagories> listData = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM catagory";
-        connect = database.connectDB();
-        try
-        {
-            prepare = connect.prepareStatement(sql);
-            result = prepare.executeQuery();
-            catagories cat;
-            while(result.next())
-            {
-                cat = new catagories(
-                    result.getString("product_id"),
-                    result.getString("product_name"), 
-                    result.getString("type"),
-                    result.getDouble("price"),
-                    result.getString("status")
-                );
-                listData.add(cat);
-            }
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        return listData;
-    }
-    private ObservableList<catagories> availableFDList;
+
+    private ObservableList<Catagories> availableFDList;
+
     public void availableFDShowData()
     {
-        availableFDList = availableFDListData();
+        availableFDList = CatagoriesDAO.Instance().getAll();
         availableFD_col_productID.setCellValueFactory(new PropertyValueFactory<>("productID"));
         availableFD_col_productName.setCellValueFactory(new PropertyValueFactory<>("name"));
         availableFD_col_type.setCellValueFactory(new PropertyValueFactory<>("type"));
         availableFD_col_price.setCellValueFactory(new PropertyValueFactory<>("price"));
         availableFD_col_status.setCellValueFactory(new PropertyValueFactory<>("status"));
-
+    
         availableFD_tableView.setItems(availableFDList);
+        TableUtil.autoResizeColumns(availableFD_tableView);
     }
 
-    public void availableFDStatus() {
-        List<String> listStatus= new ArrayList<>();
-        for(String data : status)
-        {
-            listStatus.add(data);
-        }
-        ObservableList listData = FXCollections.observableArrayList(listStatus);
+    public void availableFDStatus()
+    {
+        status.add("Available");
+        status.add("Not Available");
+        ObservableList listData = FXCollections.observableArrayList(status);
         availableFD_productStatus.setItems(listData);
     }
 
-    public void availableFDType() {
-        List<String> listCatagory = new ArrayList<>();
-        for(String data : catagories)
-        {
-            listCatagory.add(data);
-        }
-        ObservableList listData = FXCollections.observableArrayList(listCatagory);
+    public void availableFDType()
+    {
+        type.add("Meals");
+        type.add("Drinks");
+        ObservableList listData = FXCollections.observableArrayList(type);
         availableFD_productType.setItems(listData);
     }
 
-    @FXML
-    void logout(ActionEvent event) {
-        try 
+    @FXML void logout(ActionEvent event)
+    {
+        try
         {
             alert = new Alert(AlertType.CONFIRMATION);
             alert.setTitle("Confirmation Message");
             alert.setHeaderText(null);
             alert.setContentText("Are you sure want to logout?");
             Optional<ButtonType> option = alert.showAndWait();
-            
+
             if(option.get().equals(ButtonType.OK))
             {
                 logout.getScene().getWindow().hide();
@@ -513,53 +390,49 @@ public class DashboardController implements Initializable {
             e.printStackTrace();
         }
     }
-    @FXML
-    void orderAdd(ActionEvent event) {
-        
+
+    @FXML void orderAdd(ActionEvent event)
+    {
     }
 
-    @FXML
-    void orderAmount(ActionEvent event) {
-
+    @FXML void orderAmount(ActionEvent event)
+    {
     }
 
-    @FXML
-    void orderPay(ActionEvent event) {
-        
+    @FXML void orderPay(ActionEvent event)
+    {
     }
 
-    public void orderCustomerId() {
-        
-    }
-    @FXML
-    void orderProductId() {
-
+    public void orderCustomerId()
+    {
     }
 
-    @FXML
-    void orderProductName() {
-
-
-    }
-    @FXML
-    void orderQuantity(MouseEvent event) {
+    @FXML void orderProductId()
+    {
     }
 
-    @FXML
-    void orderReceipt() {
-
+    @FXML void orderProductName()
+    {
     }
 
-    @FXML
-    void orderRemove(ActionEvent event) {
-        
-    }
-    @FXML
-    void orderSelectData(MouseEvent event) {
+    @FXML void orderQuantity(MouseEvent event)
+    {
     }
 
-    @FXML
-    void switchForm(ActionEvent event) {
+    @FXML void orderReceipt()
+    {
+    }
+
+    @FXML void orderRemove(ActionEvent event)
+    {
+    }
+
+    @FXML void orderSelectData(MouseEvent event)
+    {
+    }
+
+    @FXML void switchForm(ActionEvent event)
+    {
         if(event.getSource() == dashboard_btn)
         {
             dashboard_form.setVisible(true);
@@ -585,20 +458,17 @@ public class DashboardController implements Initializable {
         }
     }
 
-    public void displayUsername() {
+    public void displayUsername()
+    {
         String user = data.username;
         username.setText(user);
     }
 
-    @Override
-    public void initialize(URL arg0, ResourceBundle arg1) {
+    @Override public void initialize(URL arg0, ResourceBundle arg1)
+    {
         displayUsername();
         availableFDStatus();
         availableFDType();
-
         availableFDShowData();
-
-        orderProductId();
-        orderProductName();
     }
 }

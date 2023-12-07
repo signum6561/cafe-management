@@ -1,5 +1,5 @@
 package controller;
 
 public class data {
-    public static String username;
+    public static String username = "default";
 }

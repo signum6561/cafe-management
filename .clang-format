@@ -1,0 +1,9 @@
+# Format Style Options - Created with Clang Power Tools
+---
+BasedOnStyle: Microsoft
+AccessModifierOffset: -1
+BinPackArguments: false
+BreakBeforeBinaryOperators: NonAssignment
+MaxEmptyLinesToKeep: 2
+SpaceBeforeParens: Never
+...
